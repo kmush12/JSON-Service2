@@ -7,29 +7,33 @@ import java.util.*;
 
 public class Flattener {
 
-    public static JsonNode flatten(JsonNode jsonNode){
-        List<Map<String,JsonNode>> maps = new ArrayList<Map<String,JsonNode>>();
+    public static JsonNode flatten(JsonNode jsonNode) {
+        List<Map<String, JsonNode>> maps = new ArrayList<Map<String, JsonNode>>();
         Iterator<JsonNode> elements = jsonNode.elements();
-        for(int i=0; i<jsonNode.size(); i++){
+        for (int i = 0; i < jsonNode.size(); i++) {
             JsonNode tmp = elements.next();
             Iterator<JsonNode> fields = tmp.elements();
             Iterator<String> fieldnames = tmp.fieldNames();
             Map<String, JsonNode> map = new HashMap<>();
-            for(int j=0; j<tmp.size(); j++){
-                JsonNode tmp2 = fields.next();
-                String fieldname = fieldnames.next();
-                if(tmp2.isObject()){
-                    Iterator<JsonNode> objectFields = tmp2.elements();
-                    Iterator<String> objectFieldnames = tmp2.fieldNames();
-                    map.put(objectFieldnames.next(), objectFields.next());
-                    map.put(objectFieldnames.next(), objectFields.next());
-                }else{
-                    map.put(fieldname, tmp2);
+            for (int j = 0; j < tmp.size(); j++) {
+                for (int j = 0; j < tmp.size(); j++) {
+                    JsonNode tmp2 = fields.next();
+                    String fieldname = fieldnames.next();
+                    if (tmp2.isObject()) {
+                        Iterator<JsonNode> objectFields = tmp2.elements();
+                        Iterator<String> objectFieldnames = tmp2.fieldNames();
+                        map.put(objectFieldnames.next(), objectFields.next());
+                        map.put(objectFieldnames.next(), objectFields.next());
+                    } else {
+                        map.put(fieldname, tmp2);
+                    }
                 }
+                maps.add(map);
             }
-            maps.add(map);
+            ObjectMapper mapper = new ObjectMapper();
+
         }
-        ObjectMapper mapper = new ObjectMapper();
-        return mapper.valueToTree(maps);
+        return jsonNode;
     }
+
 }
